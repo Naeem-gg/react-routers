@@ -1,14 +1,36 @@
 import { Form } from "react-router-dom";
+import { getContacts } from "../contact";
+async function load(){
 
+  const contact = await getContacts();
+}
 export default function Contact() {
-  const contact = {
-    first: "Your",
-    last: "Name",
+  const contact = [{
+    first: "Mohammed",
+    last: "Naeem",
     avatar: "https://placekitten.com/g/200/200",
-    twitter: "your_handle",
-    notes: "Some notes",
+    twitter: "_naeem-gg",
+    notes: "MERN stack Dev",
     favorite: true,
-  };
+  },
+  {
+    id:1,
+    first: "Mohammed",
+    last: "Naeem",
+    avatar: "https://placekitten.com/g/200/200",
+    twitter: "_naeem-gg",
+    notes: "MERN stack Dev",
+    favorite: true,
+  },
+  {
+    id:2,
+    first: "Mohammed",
+    last: "Muzammil",
+    avatar: "https://placekitten.com/g/200/200",
+    twitter: "_naeem-gg",
+    notes: "MERN stack Dev",
+    favorite: true,
+  }];
 
   return (
     <div id="contact">
@@ -45,7 +67,7 @@ export default function Contact() {
         {contact.notes && <p>{contact.notes}</p>}
 
         <div>
-          <Form action="edit">
+          <Form action="edit" onSubmit={e=>e.preventDefault()}>
             <button type="submit">Edit</button>
           </Form>
           <Form

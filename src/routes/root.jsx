@@ -1,11 +1,21 @@
-import { Outlet } from "react-router-dom";
+import { Link,Outlet,useLoaderData,Form } from "react-router-dom";
+import {getContacts,createContact} from "../contact"
+export async function loader(){
+    const contacts = await getContacts();
+    return {contacts};   
+}
+export async function action(){
+    const contacts = await createContact();
+    return {contacts};
+}
 export default function Root() {
+    const {contacts} = useLoaderData();
     return (
       <>
-        <div id="sidebar">
+      <div id="sidebar">
           <h1>React Router Contacts</h1>
           <div>
-            <form id="search-form" role="search">
+            <Form id="search-form" role="search" onSubmit={e=>e.preventDefault()}>
               <input
                 id="q"
                 aria-label="Search contacts"
@@ -22,25 +32,41 @@ export default function Root() {
                 className="sr-only"
                 aria-live="polite"
               ></div>
-            </form>
-            <form method="post">
+            </Form>
+            <Form method="post">
               <button type="submit">New</button>
-            </form>
+            </Form>
           </div>
+        
           <nav>
+          {contacts.length!==0 ? (
             <ul>
-              <li>
-                <a href={`contacts/1`}>Your Name</a>
-              </li>
-              <li>
-                <a href={`contacts/2`}>Your Friend</a>
-              </li>
+              {contacts.map((contact) => (
+                <li key={contact.id}>
+                  <Link to={`contacts/${contact.id}`}>
+                    {contact.first || contact.last ? (
+                      <>
+                        {contact.first} {contact.last}
+                      </>
+                    ) : (
+                      <i>No Name</i>
+                    )}{" "}
+                    {contact.favorite && <span>★</span>}
+                  </Link>
+                </li>
+              ))}
             </ul>
-          </nav>
-        </div>
-        <div id="detail">
+          ) : (
+            <p>
+              <i>No contacts</i>
+            </p>
+          )}
+        </nav>
+
+        <div className="details">
             <Outlet/>
         </div>
+      </div>
       </>
     );
   }
